@@ -4,18 +4,11 @@ const knexConfig = require('../knexfile.js');
 const db = knex(knexConfig.development);
 
 module.exports = {
-  getDishes,
-  getDish,
-  getRecipesByDish,
-  addDish,
-  updateDish,
-  removeDish,
-  getRecipes,
-  getRecipe,
-  getIngredientsByRecipe,
-  addRecipe,
-  updateRecipe,
-  removeRecipe
+  find,
+  findById,
+  add,
+  update,
+  remove
 };
 
 function getDishes() {

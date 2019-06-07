@@ -1,13 +1,13 @@
 const express = require('express');
 
-const dishRouter = require('./router/dish-router.js');
-const recipeRouter = require('./router/recipe-router.js');
+const projectRouter = require('./router/projects-router.js');
+const actionRouter = require('./router/actions-router.js');
 
 const server = express();
 
 server.use(express.json());
-server.use('/api/dish', dishRouter)
-server.use('/api/recipe', recipeRouter)
+server.use('/api/projects', projectRouter)
+server.use('/api/actions', actionRouter)
 
 
 const port = process.env.PORT || 5000;

@@ -30,7 +30,15 @@ router.get('/:id', mw.validateActionId, (req, res) => {
 
   db.findById(req.actionId)
   .then(action => {
-    res.status(200).json(action)
+    db.findContextsByAction(req.actionId)
+    .then(context => {
+      const actionObj = action
+      actionObj.context = context
+      res.status(200).json(action)
+    })
+    .catch(err => {
+      res.status(500).json(err.message)
+    })
   })
   .catch(err => {
     res.status(500).json(err.message)

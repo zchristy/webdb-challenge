@@ -6,6 +6,7 @@ const db = knex(knexConfig.development);
 module.exports = {
   find,
   findById,
+  findContextsByAction,
   add,
   update,
   remove
@@ -21,10 +22,12 @@ function findById(id) {
   .first()
 }
 
-// function getRecipesByDish(id) {
-//   return db('recipe')
-//   .where({ dish_id: id });
-// }
+function findContextsByAction(id) {
+  return db('action_contexts')
+  .join('contexts', 'action_contexts.context_id', 'contexts.id')
+  .select('contexts.id', 'contexts.location')
+  .where({ action_id: id });
+}
 
 function add(action) {
   return db('actions')
@@ -42,10 +45,3 @@ function remove(id) {
   .where({ id })
   .del();
 }
-
-// function getIngredientsByRecipe(id) {
-//   return db('recipe_ingredients')
-//   .join('ingredients', 'recipe_ingredients.ingredients_id', 'ingredients.id')
-//   .select('ingredients.id', 'ingredients.name as ingredient', 'recipe_ingredients.quantity')
-//   .where({ recipe_id: id });
-// }

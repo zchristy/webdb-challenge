@@ -33,7 +33,7 @@ function validateProject(req, res, next) {
   const { name, description, isComplete } = req.body
 
   if(Object.keys(post).length) {
-    if(name && description && isComplete) {
+    if(name && description && !isComplete) {
       req.project = {
         name: name,
         description: description,
@@ -72,7 +72,7 @@ function validateAction(req, res, next) {
   const { task, notes, isComplete, project_id } = req.body
 
   if(Object.keys(post).length) {
-    if(name && instructions && dish_id) {
+    if(task && notes && !isComplete && project_id) {
       req.action = {
         task: task,
         notes: notes,

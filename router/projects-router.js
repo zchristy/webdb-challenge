@@ -1,13 +1,13 @@
 const express = require('express');
 
-const db = require('../data/data-model.js')
+const db = require('../data/projects-model.js')
 
 const mw = require('../middleware/middleware.js')
 
 const router = express.Router();
 
-router.post('/', mw.validateDish, (req, res) => {
-  db.addDish(req.dish)
+router.post('/', mw.validateProject, (req, res) => {
+  db.add(req.project)
   .then(id => {
     res.status(200).json(id)
   })
@@ -17,26 +17,26 @@ router.post('/', mw.validateDish, (req, res) => {
 });
 
 router.get('/', (req, res) => {
-  db.getDishes()
-  .then(dishes => {
-    res.status(200).json(dishes)
+  db.find()
+  .then(projects => {
+    res.status(200).json(projects)
   })
   .catch(err => {
     res.status(500).json(err.message)
   })
 });
 
-router.get('/:id', mw.validateDishId, (req, res) => {
+router.get('/:id', mw.validateProjectId, (req, res) => {
 
-  db.getDish(req.dishId)
-  .then(dish => {
+  db.findById(req.projectId)
+  .then(project => {
 
-    db.getRecipesByDish(req.dishId)
-    .then(recipes => {
+    db.findActionsByProject(req.projectId)
+    .then(actions => {
 
-      const dishObj = dish
-      dishObj.recipes = recipes
-      res.status(200).json(dish)
+      const projectObj = project
+      projectObj.actions = actions
+      res.status(200).json(project)
 
     })
 
@@ -50,20 +50,20 @@ router.get('/:id', mw.validateDishId, (req, res) => {
   })
 });
 
-router.put('/:id', mw.validateDishId, mw.validateDish, (req, res) => {
-  db.updateDish(req.dishId, req.dish)
-  .then(dish => {
-    res.status(200).json(dish)
+router.put('/:id', mw.validateProjectId, mw.validateProject, (req, res) => {
+  db.update(req.projectId, req.project)
+  .then(project => {
+    res.status(200).json(project)
   })
   .catch(err => {
     res.status(500).json(err.message)
   })
 });
 
-router.delete('/:id', mw.validateDishId, (req, res) => {
-  db.removeDish(req.dishId)
-  .then(dish => {
-    res.status(200).json({message: "Dish succesfully Deleted"})
+router.delete('/:id', mw.validateProjectId, (req, res) => {
+  db.remove(req.projectId)
+  .then(project => {
+    res.status(200).json({message: "Project succesfully Deleted"})
   })
   .catch(err => {
     res.status(500).json(err.message)

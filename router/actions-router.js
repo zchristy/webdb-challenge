@@ -1,13 +1,13 @@
 const express = require('express');
 
-const db = require('../data/data-model.js')
+const db = require('../data/actions-model.js')
 
 const mw = require('../middleware/middleware.js')
 
 const router = express.Router();
 
-router.post('/', mw.validateRecipe, (req, res) => {
-  db.addRecipe(req.recipe)
+router.post('/', mw.validateAction, (req, res) => {
+  db.add(req.action)
   .then(id => {
     res.status(200).json(id)
   })
@@ -17,53 +17,40 @@ router.post('/', mw.validateRecipe, (req, res) => {
 });
 
 router.get('/', (req, res) => {
-  db.getRicpes()
-  .then(recipes => {
-    res.status(200).json(recipes)
+  db.find()
+  .then(actions => {
+    res.status(200).json(actions)
   })
   .catch(err => {
     res.status(500).json(err.message)
   })
 });
 
-router.get('/:id', mw.validateRecipeId, (req, res) => {
+router.get('/:id', mw.validateActionId, (req, res) => {
 
-  db.getRecipe(req.recipeId)
-  .then(recipe => {
-
-    db.getIngredientsByRecipe(req.recipeId)
-    .then(ingredients => {
-
-      const recipeObj = recipe
-      recipeObj.ingredients = ingredients
-      res.status(200).json(recipe)
-
-    })
-
-    .catch(err => {
-      res.status(500).json(err.message)
-    })
-  })
-
-  .catch(err => {
-    res.status(500).json(err.message)
-  })
-});
-
-router.put('/:id', mw.validateRecipeId, mw.validateRecipe, (req, res) => {
-  db.updateRecipe(req.recipeId, req.recipe)
-  .then(recipe => {
-    res.status(200).json(recipe)
+  db.findById(req.actionId)
+  .then(action => {
+    res.status(200).json(action)
   })
   .catch(err => {
     res.status(500).json(err.message)
   })
 });
 
-router.delete('/:id', mw.validateRecipeId, (req, res) => {
-  db.removeRecipe(req.recipeId)
-  .then(recipe => {
-    res.status(200).json({message: "Recipe succesfully Deleted"})
+router.put('/:id', mw.validateActionId, mw.validateAction, (req, res) => {
+  db.update(req.actionId, req.action)
+  .then(action => {
+    res.status(200).json(action)
+  })
+  .catch(err => {
+    res.status(500).json(err.message)
+  })
+});
+
+router.delete('/:id', mw.validateActionId, (req, res) => {
+  db.remove(req.actionId)
+  .then(action => {
+    res.status(200).json({message: "Action succesfully Deleted"})
   })
   .catch(err => {
     res.status(500).json(err.message)

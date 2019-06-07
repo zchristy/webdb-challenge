@@ -1,24 +1,25 @@
-const dataDb = require('../data/data-model.js')
+const projectsDb = require('../data/projects-model.js')
+const actionsDb = require('../data/actions-model.js')
 
 module.exports = {
-  validateDishId,
-  validateDish,
-  validateRecipeId,
-  validateRecipe,
+  validateProjectId,
+  validateProject,
+  validateActionId,
+  validateAction,
 };
 
 //custom middleware
 
-function validateDishId(req, res, next) {
+function validateProjectId(req, res, next) {
   const { id } = req.params
 
-    dataDb.getDish(id)
-    .then(dish => {
-      if(dish) {
-        req.dishId = dish.id
+    projectsDb.findById(id)
+    .then(project => {
+      if(project) {
+        req.projectId = project.id
         next()
       } else {
-        res.status(400).json({ message: "invalid dish id" })
+        res.status(400).json({ message: "invalid project id" })
       }
     })
     .catch(err => {
@@ -27,34 +28,37 @@ function validateDishId(req, res, next) {
 
 };
 
-function validateDish(req, res, next) {
-  const { name } = req.body
+function validateProject(req, res, next) {
+  const post = req.body
+  const { name, description, isComplete } = req.body
 
-  if(Object.keys(req.body).length) {
-    if(name) {
-      req.dish = {
-        name: name
+  if(Object.keys(post).length) {
+    if(name && description && isComplete) {
+      req.project = {
+        name: name,
+        description: description,
+        isComplete: isComplete
       }
       next()
     } else {
-      res.status(400).json({ message: "missing required field" })
+      res.status(400).json({ message: "missing required field or fields" })
     }
   } else {
-    res.status(400).json({ message: "missing dish data" })
+    res.status(400).json({ message: "missing project data" })
   }
 
 };
 
-function validateRecipeId(req, res, next) {
+function validateActionId(req, res, next) {
   const { id } = req.params
 
-    dataDb.getRecipe(id)
-    .then(recipe => {
-      if(recipe) {
-        req.recipeId = recipe.id
+    actionsDb.findById(id)
+    .then(action => {
+      if(action) {
+        req.actionId = action.id
         next()
       } else {
-        res.status(400).json({ message: "invalid recipe id" })
+        res.status(400).json({ message: "invalid action id" })
       }
     })
     .catch(err => {
@@ -63,21 +67,23 @@ function validateRecipeId(req, res, next) {
 
 };
 
-function validateRecipe(req, res, next) {
-  const { name, instructions, dish_id } = req.body
+function validateAction(req, res, next) {
+  const post = req.body
+  const { task, notes, isComplete, project_id } = req.body
 
-  if(Object.keys(req.body).length) {
+  if(Object.keys(post).length) {
     if(name && instructions && dish_id) {
-      req.recipe = {
-        name: name,
-        instructions: instructions,
-        dish_id: dish_id
+      req.action = {
+        task: task,
+        notes: notes,
+        isComplete: isComplete,
+        project_id: project_id
       }
       next()
     } else {
       res.status(400).json({ message: "missing required name field or fields" })
     }
   } else {
-    res.status(400).json({ message: "missing recipe data" })
+    res.status(400).json({ message: "missing action data" })
   }
 };
